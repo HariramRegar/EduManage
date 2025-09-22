@@ -1,5 +1,9 @@
-const { getDefaultConfig } = require('expo/metro-config');
+const exclusionList = require('metro-config/src/defaults/exclusionList');
 
-const config = getDefaultConfig(__dirname);
+module.exports = {
+  resolver: {
+    blacklistRE: exclusionList([/node_modules\/.*/])
+  },
+  watchFolders: []
+};
 
-module.exports = config;

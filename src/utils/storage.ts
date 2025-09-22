@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as SecureStore from 'expo-secure-store';
 
 // Regular data storage
 export const storage = {
@@ -37,11 +36,11 @@ export const storage = {
   },
 };
 
-// Secure storage for sensitive data
+// Secure storage for sensitive data (using AsyncStorage for now)
 export const secureStorage = {
   async getItem(key: string): Promise<string | null> {
     try {
-      return await SecureStore.getItemAsync(key);
+      return await AsyncStorage.getItem(`secure_${key}`);
     } catch (error) {
       console.error('Error getting item from secure storage:', error);
       return null;
@@ -50,7 +49,7 @@ export const secureStorage = {
 
   async setItem(key: string, value: string): Promise<void> {
     try {
-      await SecureStore.setItemAsync(key, value);
+      await AsyncStorage.setItem(`secure_${key}`, value);
     } catch (error) {
       console.error('Error setting item in secure storage:', error);
     }
@@ -58,7 +57,7 @@ export const secureStorage = {
 
   async removeItem(key: string): Promise<void> {
     try {
-      await SecureStore.deleteItemAsync(key);
+      await AsyncStorage.removeItem(`secure_${key}`);
     } catch (error) {
       console.error('Error removing item from secure storage:', error);
     }
