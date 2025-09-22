@@ -51,7 +51,7 @@ export const Button: React.FC<ButtonProps> = ({
       style={buttonStyle}
       onPress={onPress}
       disabled={disabled || loading}
-      activeOpacity={0.7}
+      activeOpacity={0.85}
     >
       {loading ? (
         <ActivityIndicator
@@ -71,6 +71,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
+    minWidth: 120,
+    ...theme.shadows.sm,
   },
   primary: {
     backgroundColor: theme.colors.primary,
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
     minHeight: 52,
   },
   disabled: {
-    opacity: 0.5,
+    opacity: 0.6,
   },
   text: {
     fontWeight: theme.fontWeight.semibold,
@@ -130,6 +132,6 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSize.lg,
   },
   disabledText: {
-    opacity: 0.7,
+    opacity: 0.8,
   },
 });

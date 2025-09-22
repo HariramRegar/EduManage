@@ -13,6 +13,7 @@ import { Button } from '../components/common/Button';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { dataStorage } from '../utils/storage';
 import { theme } from '../constants/theme';
+import { useNavigation } from '@react-navigation/native';
 
 interface DashboardStats {
   totalStudents: number;
@@ -25,6 +26,7 @@ interface DashboardStats {
 
 const DashboardScreen: React.FC = () => {
   const { user, logout } = useAuth();
+  const navigation = useNavigation<any>();
   const [stats, setStats] = useState<DashboardStats>({
     totalStudents: 0,
     totalTeachers: 0,
@@ -157,33 +159,43 @@ const DashboardScreen: React.FC = () => {
         <Text style={styles.sectionTitle}>Quick Actions</Text>
         <View style={styles.quickActionsGrid}>
           <QuickAction
+            title="View Students"
+            onPress={() => navigation.navigate('StudentList')}
+            color={theme.colors.secondary}
+          />
+          <QuickAction
+            title="View Teachers"
+            onPress={() => navigation.navigate('TeacherList')}
+            color={theme.colors.secondary}
+          />
+          <QuickAction
             title="Add Student"
-            onPress={() => {/* Navigation handled by navigator */}}
+            onPress={() => navigation.navigate('StudentForm')}
             color={theme.colors.primary}
           />
           <QuickAction
             title="Add Teacher"
-            onPress={() => {/* Navigation handled by navigator */}}
+            onPress={() => navigation.navigate('TeacherForm')}
             color={theme.colors.success}
           />
           <QuickAction
             title="Mark Attendance"
-            onPress={() => {/* Navigation handled by navigator */}}
+            onPress={() => navigation.navigate('Attendance')}
             color={theme.colors.accent}
           />
           <QuickAction
             title="Add Grade"
-            onPress={() => {/* Navigation handled by navigator */}}
+            onPress={() => navigation.navigate('GradeForm')}
             color={theme.colors.warning}
           />
           <QuickAction
             title="Collect Fee"
-            onPress={() => {/* Navigation handled by navigator */}}
+            onPress={() => navigation.navigate('FeeForm')}
             color={theme.colors.error}
           />
           <QuickAction
             title="Admission Form"
-            onPress={() => {/* Navigation handled by navigator */}}
+            onPress={() => navigation.navigate('AdmissionForm')}
             color={theme.colors.secondary}
           />
         </View>
