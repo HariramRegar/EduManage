@@ -1,21 +1,21 @@
 export const theme = {
   colors: {
-    primary: '#2563eb',
-    primaryDark: '#1d4ed8',
-    secondary: '#64748b',
-    accent: '#f59e0b',
-    success: '#10b981',
-    warning: '#f59e0b',
-    error: '#ef4444',
-    background: '#f8fafc',
-    surface: '#ffffff',
-    surfaceVariant: '#f1f5f9',
-    text: '#1e293b',
-    textSecondary: '#64748b',
-    textLight: '#94a3b8',
-    border: '#e2e8f0',
-    borderLight: '#f1f5f9',
-    white: '#ffffff',
+    primary: '#00897B',        // Teal (primary action buttons, active indicators)
+    primaryDark: '#00796B',
+    secondary: '#0D47A1',      // Deep Blue (top bar, sidebars, headers)
+    accent: '#00897B',         // Align accent with primary for consistency
+    success: '#00897B',
+    warning: '#F39C12',
+    error: '#E74C3C',
+    background: '#E0E0E0',     // Light Gray (main backgrounds)
+    surface: '#E0E0E0',        // Panels/cards use light gray per spec
+    surfaceVariant: '#D6D6D6',
+    text: '#212121',           // Dark Gray (primary text)
+    textSecondary: '#757575',  // Subtle text on light bg
+    textLight: '#B0BEC5',
+    border: '#D0D0D0',
+    borderLight: '#ECECEC',
+    white: '#ffffff',          // Text on deep blue backgrounds
     black: '#000000',
   },
   spacing: {
@@ -52,30 +52,21 @@ export const theme = {
   shadows: {
     sm: {
       shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 1,
-      },
+      shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.05,
       shadowRadius: 2,
       elevation: 1,
     },
     md: {
       shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
+      shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.08,
       shadowRadius: 6,
       elevation: 3,
     },
     lg: {
       shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 6,
-      },
+      shadowOffset: { width: 0, height: 6 },
       shadowOpacity: 0.12,
       shadowRadius: 12,
       elevation: 6,
@@ -83,12 +74,7 @@ export const theme = {
   },
   layout: {
     containerMaxWidth: 1200,
-    breakpoints: {
-      sm: 480,
-      md: 768,
-      lg: 1024,
-      xl: 1280,
-    },
+    breakpoints: { sm: 480, md: 768, lg: 1024, xl: 1280 },
   },
 };
 

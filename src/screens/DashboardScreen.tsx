@@ -96,15 +96,14 @@ const DashboardScreen: React.FC = () => {
     </Card>
   );
 
-  const QuickAction: React.FC<{ title: string; onPress: () => void; color: string }> = ({
+  const QuickAction: React.FC<{ title: string; onPress: () => void }> = ({
     title,
     onPress,
-    color,
   }) => (
     <TouchableOpacity
-      style={[styles.quickAction, { backgroundColor: color }]}
+      style={styles.quickAction}
       onPress={onPress}
-      activeOpacity={0.7}
+      activeOpacity={0.9}
     >
       <Text style={styles.quickActionText}>{title}</Text>
     </TouchableOpacity>
@@ -135,22 +134,22 @@ const DashboardScreen: React.FC = () => {
           <StatCard
             title="Total Students"
             value={stats.totalStudents}
-            color={theme.colors.primary}
+            color={theme.colors.secondary}
           />
           <StatCard
             title="Total Teachers"
             value={stats.totalTeachers}
-            color={theme.colors.success}
+            color={theme.colors.secondary}
           />
           <StatCard
             title="Pending Fees"
             value={stats.pendingFees}
-            color={theme.colors.warning}
+            color={theme.colors.secondary}
           />
           <StatCard
             title="Today's Attendance"
             value={stats.attendanceToday}
-            color={theme.colors.accent}
+            color={theme.colors.secondary}
           />
         </View>
       </View>
@@ -158,46 +157,14 @@ const DashboardScreen: React.FC = () => {
       <View style={styles.quickActionsContainer}>
         <Text style={styles.sectionTitle}>Quick Actions</Text>
         <View style={styles.quickActionsGrid}>
-          <QuickAction
-            title="View Students"
-            onPress={() => navigation.navigate('StudentList')}
-            color={theme.colors.secondary}
-          />
-          <QuickAction
-            title="View Teachers"
-            onPress={() => navigation.navigate('TeacherList')}
-            color={theme.colors.secondary}
-          />
-          <QuickAction
-            title="Add Student"
-            onPress={() => navigation.navigate('StudentForm')}
-            color={theme.colors.primary}
-          />
-          <QuickAction
-            title="Add Teacher"
-            onPress={() => navigation.navigate('TeacherForm')}
-            color={theme.colors.success}
-          />
-          <QuickAction
-            title="Mark Attendance"
-            onPress={() => navigation.navigate('Attendance')}
-            color={theme.colors.accent}
-          />
-          <QuickAction
-            title="Add Grade"
-            onPress={() => navigation.navigate('GradeForm')}
-            color={theme.colors.warning}
-          />
-          <QuickAction
-            title="Collect Fee"
-            onPress={() => navigation.navigate('FeeForm')}
-            color={theme.colors.error}
-          />
-          <QuickAction
-            title="Admission Form"
-            onPress={() => navigation.navigate('AdmissionForm')}
-            color={theme.colors.secondary}
-          />
+          <QuickAction title="View Students" onPress={() => navigation.navigate('StudentList')} />
+          <QuickAction title="View Teachers" onPress={() => navigation.navigate('TeacherList')} />
+          <QuickAction title="Add Student" onPress={() => navigation.navigate('StudentForm')} />
+          <QuickAction title="Add Teacher" onPress={() => navigation.navigate('TeacherForm')} />
+          <QuickAction title="Mark Attendance" onPress={() => navigation.navigate('Attendance')} />
+          <QuickAction title="Add Grade" onPress={() => navigation.navigate('GradeForm')} />
+          <QuickAction title="Collect Fee" onPress={() => navigation.navigate('FeeForm')} />
+          <QuickAction title="Admission Form" onPress={() => navigation.navigate('AdmissionForm')} />
         </View>
       </View>
 
@@ -289,9 +256,12 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.lg,
     marginBottom: theme.spacing.md,
     alignItems: 'center',
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
   },
   quickActionText: {
-    color: theme.colors.white,
+    color: theme.colors.primary,
     fontSize: theme.fontSize.md,
     fontWeight: theme.fontWeight.semibold,
   },

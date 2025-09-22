@@ -2,6 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAuth } from '../contexts/AuthContext';
+import { theme } from '../constants/theme';
 
 // Import screens
 import LoginScreen from '../screens/auth/LoginScreen';
@@ -32,13 +33,17 @@ const AppNavigator: React.FC = () => {
       <Stack.Navigator
         screenOptions={{
           headerStyle: {
-            backgroundColor: '#2563eb',
+            backgroundColor: theme.colors.secondary,
           },
-          headerTintColor: '#ffffff',
+          headerTintColor: theme.colors.white,
           headerTitleStyle: {
             fontWeight: '600',
+            color: theme.colors.white,
           },
           headerBackTitleVisible: false,
+          contentStyle: {
+            backgroundColor: theme.colors.background,
+          },
         }}
       >
         {!user ? (

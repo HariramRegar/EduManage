@@ -33,7 +33,7 @@ export const Card: React.FC<CardProps> = ({
         style={cardStyle}
         onPress={onPress}
         disabled={disabled}
-        activeOpacity={0.7}
+        activeOpacity={0.9}
       >
         {children}
       </TouchableOpacity>
@@ -51,13 +51,15 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing.lg,
+    padding: theme.spacing.xl,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
     ...theme.shadows.md,
   },
   pressable: {
-    // Additional styles for pressable cards can be added here
+    // For web, hover is handled by opacity via activeOpacity
   },
   disabled: {
-    opacity: 0.5,
+    opacity: 0.6,
   },
 });

@@ -106,7 +106,7 @@ export const Input: React.FC<InputProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: theme.spacing.md,
+    marginBottom: theme.spacing.lg,
   },
   label: {
     fontSize: theme.fontSize.sm,
@@ -120,14 +120,16 @@ const styles = StyleSheet.create({
   inputContainer: {
     borderWidth: 1,
     borderColor: theme.colors.border,
-    borderRadius: theme.borderRadius.md,
+    borderRadius: theme.borderRadius.lg,
     backgroundColor: theme.colors.surface,
     flexDirection: 'row',
     alignItems: 'center',
+    ...theme.shadows.sm,
   },
   focused: {
     borderColor: theme.colors.primary,
-    ...theme.shadows.sm,
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
   },
   error: {
     borderColor: theme.colors.error,
@@ -138,14 +140,14 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    paddingHorizontal: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
     paddingVertical: theme.spacing.md,
     fontSize: theme.fontSize.md,
     color: theme.colors.text,
-    minHeight: 44,
+    minHeight: 48,
   },
   multilineInput: {
-    minHeight: 80,
+    minHeight: 96,
     textAlignVertical: 'top',
   },
   disabledInput: {
