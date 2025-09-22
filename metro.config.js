@@ -1,9 +1,15 @@
+const { getDefaultConfig } = require('expo/metro-config');
 const exclusionList = require('metro-config/src/defaults/exclusionList');
 
-module.exports = {
-  resolver: {
-    blacklistRE: exclusionList([/node_modules\/.*/])
-  },
-  watchFolders: []
+const config = getDefaultConfig(__dirname);
+
+config.resolver = {
+  ...config.resolver,
+  blockList: exclusionList([
+    /electron\/.*$/, // ignore Electron sources
+    /release\/.*$/,  // ignore packaged outputs
+  ]),
 };
+
+module.exports = config;
 

@@ -1,0 +1,13 @@
+appId: com.example.edumanage
+productName: EduManage
+files:
+  - dist/**
+  - electron/**
+  - package.json
+mac:
+  category: public.app-category.education
+  target:
+    - dmg
+    - zip
+directories:
+  output: release
