@@ -51,6 +51,7 @@ const PhotoPicker: React.FC<PhotoPickerProps> = ({
     setIsLoading(true);
 
     try {
+      console.log('Launching image library...');
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -59,12 +60,17 @@ const PhotoPicker: React.FC<PhotoPickerProps> = ({
         base64: false,
       });
 
-      if (!result.canceled && result.assets[0]) {
+      console.log('Image picker result:', result);
+
+      if (!result.canceled && result.assets && result.assets[0]) {
+        console.log('Selected image URI:', result.assets[0].uri);
         onChange(result.assets[0].uri);
+      } else {
+        console.log('Image selection was canceled or no assets');
       }
     } catch (error) {
       console.error('Error picking image:', error);
-      Alert.alert('Error', 'Failed to select image. Please try again.');
+      Alert.alert('Error', `Failed to select image: ${error.message || 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
@@ -77,6 +83,7 @@ const PhotoPicker: React.FC<PhotoPickerProps> = ({
     setIsLoading(true);
 
     try {
+      console.log('Launching camera...');
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
         aspect: [1, 1], // Square aspect ratio for passport photos
@@ -84,18 +91,24 @@ const PhotoPicker: React.FC<PhotoPickerProps> = ({
         base64: false,
       });
 
-      if (!result.canceled && result.assets[0]) {
+      console.log('Camera result:', result);
+
+      if (!result.canceled && result.assets && result.assets[0]) {
+        console.log('Captured image URI:', result.assets[0].uri);
         onChange(result.assets[0].uri);
+      } else {
+        console.log('Camera was canceled or no assets');
       }
     } catch (error) {
       console.error('Error taking photo:', error);
-      Alert.alert('Error', 'Failed to take photo. Please try again.');
+      Alert.alert('Error', `Failed to take photo: ${error.message || 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
   };
 
   const showImageOptions = () => {
+    console.log('Showing image options dialog');
     Alert.alert(
       'Select Photo',
       'Choose how you want to add a photo',
@@ -142,7 +155,10 @@ const PhotoPicker: React.FC<PhotoPickerProps> = ({
         ) : (
           <TouchableOpacity
             style={[styles.placeholder, error && styles.placeholderError]}
-            onPress={showImageOptions}
+            onPress={() => {
+              console.log('PhotoPicker placeholder pressed');
+              showImageOptions();
+            }}
             activeOpacity={0.7}
             disabled={isLoading}
           >

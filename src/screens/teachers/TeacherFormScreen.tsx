@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
 import { Card } from '../../components/common/Card';
@@ -26,7 +27,11 @@ import {
 } from '../../utils/validation';
 
 const TeacherFormScreen: React.FC = () => {
+  const navigation = useNavigation<any>();
+  const route = useRoute<any>();
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingTeacherId, setEditingTeacherId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     teacherId: '',
     firstName: '',
@@ -46,8 +51,51 @@ const TeacherFormScreen: React.FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    generateTeacherId();
-  }, []);
+    const teacherId = route.params?.id;
+    if (teacherId) {
+      setIsEditMode(true);
+      setEditingTeacherId(teacherId);
+      loadTeacherData(teacherId);
+    } else {
+      generateTeacherId();
+    }
+  }, [route.params]);
+
+  const loadTeacherData = async (id: string) => {
+    try {
+      setIsLoading(true);
+      const teachers = await dataStorage.getTeachers();
+      const teacher = teachers.find(t => t.id === id);
+      
+      if (teacher) {
+        setFormData({
+          teacherId: teacher.teacherId,
+          firstName: teacher.firstName,
+          lastName: teacher.lastName,
+          email: teacher.email,
+          phone: teacher.phone,
+          dateOfBirth: teacher.dateOfBirth,
+          address: teacher.address,
+          qualification: teacher.qualification,
+          subject: teacher.subject,
+          experience: teacher.experience.toString(),
+          salary: teacher.salary.toString(),
+          joiningDate: teacher.joiningDate,
+          status: teacher.status,
+          photo: teacher.photo || '',
+        });
+      } else {
+        Alert.alert('Error', 'Teacher not found');
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error('Error loading teacher:', error);
+      Alert.alert('Error', 'Failed to load teacher data');
+      navigation.goBack();
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const generateTeacherId = () => {
     const randomNum = Math.floor(Math.random() * 9000) + 1000;
@@ -132,22 +180,40 @@ const TeacherFormScreen: React.FC = () => {
     try {
       setIsLoading(true);
       
-      const newTeacher: Teacher = {
-        id: Date.now().toString(),
-        ...formData,
-        experience: parseInt(formData.experience),
-        salary: parseFloat(formData.salary),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
       const existingTeachers = await dataStorage.getTeachers();
-      const updatedTeachers = [...existingTeachers, newTeacher];
+      let updatedTeachers: Teacher[];
+
+      if (isEditMode && editingTeacherId) {
+        // Update existing teacher
+        updatedTeachers = existingTeachers.map(teacher => 
+          teacher.id === editingTeacherId 
+            ? {
+                ...teacher,
+                ...formData,
+                experience: parseInt(formData.experience),
+                salary: parseFloat(formData.salary),
+                updatedAt: new Date().toISOString(),
+              }
+            : teacher
+        );
+      } else {
+        // Create new teacher
+        const newTeacher: Teacher = {
+          id: Date.now().toString(),
+          ...formData,
+          experience: parseInt(formData.experience),
+          salary: parseFloat(formData.salary),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        updatedTeachers = [...existingTeachers, newTeacher];
+      }
       
       await dataStorage.saveTeachers(updatedTeachers);
       
-      Alert.alert('Success', 'Teacher added successfully!', [
-        { text: 'OK', onPress: () => {/* Navigation handled by navigator */} }
+      const successMessage = isEditMode ? 'Teacher updated successfully!' : 'Teacher added successfully!';
+      Alert.alert('Success', successMessage, [
+        { text: 'OK', onPress: () => navigation.navigate('TeacherList') }
       ]);
     } catch (error) {
       console.error('Error saving teacher:', error);
@@ -158,7 +224,7 @@ const TeacherFormScreen: React.FC = () => {
   };
 
   if (isLoading) {
-    return <LoadingSpinner text="Saving teacher..." overlay />;
+    return <LoadingSpinner text={isEditMode ? "Loading teacher..." : "Saving teacher..."} overlay />;
   }
 
   return (
@@ -171,7 +237,9 @@ const TeacherFormScreen: React.FC = () => {
         keyboardShouldPersistTaps="handled"
       >
         <Card style={styles.formCard}>
-          <Text style={styles.formTitle}>Teacher Information</Text>
+          <Text style={styles.formTitle}>
+            {isEditMode ? 'Edit Teacher Information' : 'Teacher Information'}
+          </Text>
           
           <PhotoPicker
             label="Teacher Photo"
@@ -319,7 +387,7 @@ const TeacherFormScreen: React.FC = () => {
           </View>
 
           <Button
-            title="Save Teacher"
+            title={isEditMode ? 'Update Teacher' : 'Save Teacher'}
             onPress={handleSubmit}
             style={styles.submitButton}
             loading={isLoading}

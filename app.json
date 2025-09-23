@@ -19,6 +19,14 @@
     "web": {
       "bundler": "metro"
     },
-    "plugins": []
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you select profile pictures for students and teachers.",
+          "cameraPermission": "The app accesses your camera to let you take profile pictures for students and teachers."
+        }
+      ]
+    ]
   }
 }

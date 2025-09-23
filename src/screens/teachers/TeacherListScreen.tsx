@@ -9,6 +9,7 @@ import {
   RefreshControl,
   Image,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
@@ -17,6 +18,7 @@ import { Teacher } from '../../types';
 import { theme } from '../../constants/theme';
 
 const TeacherListScreen: React.FC = () => {
+  const navigation = useNavigation<any>();
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -118,7 +120,7 @@ const TeacherListScreen: React.FC = () => {
       <View style={styles.actionButtons}>
         <Button
           title="Edit"
-          onPress={() => {/* Navigation handled by navigator */}}
+          onPress={() => navigation.navigate('TeacherForm', { id: item.id })}
           variant="outline"
           size="small"
           style={styles.actionButton}
@@ -144,7 +146,7 @@ const TeacherListScreen: React.FC = () => {
         <Text style={styles.title}>Teachers ({teachers.length})</Text>
         <Button
           title="Add Teacher"
-          onPress={() => {/* Navigation handled by navigator */}}
+          onPress={() => navigation.navigate('TeacherForm')}
           style={styles.addButton}
         />
       </View>

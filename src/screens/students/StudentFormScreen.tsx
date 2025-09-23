@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
 import { Card } from '../../components/common/Card';
@@ -25,7 +26,11 @@ import {
 } from '../../utils/validation';
 
 const StudentFormScreen: React.FC = () => {
+  const navigation = useNavigation<any>();
+  const route = useRoute<any>();
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingStudentId, setEditingStudentId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     studentId: '',
     firstName: '',
@@ -46,8 +51,52 @@ const StudentFormScreen: React.FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    generateStudentId();
-  }, []);
+    const studentId = route.params?.id;
+    if (studentId) {
+      setIsEditMode(true);
+      setEditingStudentId(studentId);
+      loadStudentData(studentId);
+    } else {
+      generateStudentId();
+    }
+  }, [route.params]);
+
+  const loadStudentData = async (id: string) => {
+    try {
+      setIsLoading(true);
+      const students = await dataStorage.getStudents();
+      const student = students.find(s => s.id === id);
+      
+      if (student) {
+        setFormData({
+          studentId: student.studentId,
+          firstName: student.firstName,
+          lastName: student.lastName,
+          email: student.email,
+          phone: student.phone,
+          dateOfBirth: student.dateOfBirth,
+          address: student.address,
+          parentName: student.parentName,
+          parentPhone: student.parentPhone,
+          parentEmail: student.parentEmail,
+          grade: student.grade,
+          section: student.section,
+          admissionDate: student.admissionDate,
+          status: student.status,
+          photo: student.photo || '',
+        });
+      } else {
+        Alert.alert('Error', 'Student not found');
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error('Error loading student:', error);
+      Alert.alert('Error', 'Failed to load student data');
+      navigation.goBack();
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const generateStudentId = () => {
     const year = new Date().getFullYear();
@@ -139,20 +188,36 @@ const StudentFormScreen: React.FC = () => {
     try {
       setIsLoading(true);
       
-      const newStudent: Student = {
-        id: Date.now().toString(),
-        ...formData,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
       const existingStudents = await dataStorage.getStudents();
-      const updatedStudents = [...existingStudents, newStudent];
+      let updatedStudents: Student[];
+
+      if (isEditMode && editingStudentId) {
+        // Update existing student
+        updatedStudents = existingStudents.map(student => 
+          student.id === editingStudentId 
+            ? {
+                ...student,
+                ...formData,
+                updatedAt: new Date().toISOString(),
+              }
+            : student
+        );
+      } else {
+        // Create new student
+        const newStudent: Student = {
+          id: Date.now().toString(),
+          ...formData,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        updatedStudents = [...existingStudents, newStudent];
+      }
       
       await dataStorage.saveStudents(updatedStudents);
       
-      Alert.alert('Success', 'Student added successfully!', [
-        { text: 'OK', onPress: () => {/* Navigation handled by navigator */} }
+      const successMessage = isEditMode ? 'Student updated successfully!' : 'Student added successfully!';
+      Alert.alert('Success', successMessage, [
+        { text: 'OK', onPress: () => navigation.navigate('StudentList') }
       ]);
     } catch (error) {
       console.error('Error saving student:', error);
@@ -163,7 +228,7 @@ const StudentFormScreen: React.FC = () => {
   };
 
   if (isLoading) {
-    return <LoadingSpinner text="Saving student..." overlay />;
+    return <LoadingSpinner text={isEditMode ? "Loading student..." : "Saving student..."} overlay />;
   }
 
   return (
@@ -176,7 +241,9 @@ const StudentFormScreen: React.FC = () => {
         keyboardShouldPersistTaps="handled"
       >
         <Card style={styles.formCard}>
-          <Text style={styles.formTitle}>Student Information</Text>
+          <Text style={styles.formTitle}>
+            {isEditMode ? 'Edit Student Information' : 'Student Information'}
+          </Text>
           
           <PhotoPicker
             label="Passport Photo"
@@ -342,7 +409,7 @@ const StudentFormScreen: React.FC = () => {
           </View>
 
           <Button
-            title="Save Student"
+            title={isEditMode ? 'Update Student' : 'Save Student'}
             onPress={handleSubmit}
             style={styles.submitButton}
             loading={isLoading}
