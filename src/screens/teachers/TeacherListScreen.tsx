@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   RefreshControl,
+  Image,
 } from 'react-native';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
@@ -80,6 +81,17 @@ const TeacherListScreen: React.FC = () => {
   const renderTeacher = ({ item }: { item: Teacher }) => (
     <Card style={styles.teacherCard}>
       <View style={styles.teacherHeader}>
+        <View style={styles.teacherPhotoContainer}>
+          {item.photo ? (
+            <Image source={{ uri: item.photo }} style={styles.teacherPhoto} />
+          ) : (
+            <View style={styles.placeholderPhoto}>
+              <Text style={styles.placeholderText}>
+                {item.firstName.charAt(0)}{item.lastName.charAt(0)}
+              </Text>
+            </View>
+          )}
+        </View>
         <View style={styles.teacherInfo}>
           <Text style={styles.teacherName}>
             {item.firstName} {item.lastName}
@@ -195,6 +207,28 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: theme.spacing.md,
+  },
+  teacherPhotoContainer: {
+    marginRight: theme.spacing.md,
+  },
+  teacherPhoto: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: theme.colors.primaryBackground,
+  },
+  placeholderPhoto: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: theme.colors.accent,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  placeholderText: {
+    color: theme.colors.white,
+    fontSize: theme.fontSize.lg,
+    fontWeight: theme.fontWeight.semibold,
   },
   teacherInfo: {
     flex: 1,

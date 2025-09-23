@@ -12,6 +12,7 @@ import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
 import { Card } from '../../components/common/Card';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
+import PhotoPicker from '../../components/common/PhotoPicker';
 import { dataStorage } from '../../utils/storage';
 import { Teacher } from '../../types';
 import { theme } from '../../constants/theme';
@@ -40,6 +41,7 @@ const TeacherFormScreen: React.FC = () => {
     salary: '',
     joiningDate: new Date().toISOString().split('T')[0],
     status: 'active' as 'active' | 'inactive',
+    photo: '',
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -170,6 +172,13 @@ const TeacherFormScreen: React.FC = () => {
       >
         <Card style={styles.formCard}>
           <Text style={styles.formTitle}>Teacher Information</Text>
+          
+          <PhotoPicker
+            label="Teacher Photo"
+            value={formData.photo}
+            onChange={(uri) => updateFormData('photo', uri)}
+            placeholder="Add teacher photo"
+          />
           
           <View style={styles.row}>
             <View style={styles.halfWidth}>

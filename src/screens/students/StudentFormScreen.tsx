@@ -12,6 +12,7 @@ import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
 import { Card } from '../../components/common/Card';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
+import PhotoPicker from '../../components/common/PhotoPicker';
 import { dataStorage } from '../../utils/storage';
 import { Student } from '../../types';
 import { theme } from '../../constants/theme';
@@ -40,6 +41,7 @@ const StudentFormScreen: React.FC = () => {
     section: '',
     admissionDate: new Date().toISOString().split('T')[0],
     status: 'active' as 'active' | 'inactive' | 'graduated',
+    photo: '',
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -175,6 +177,13 @@ const StudentFormScreen: React.FC = () => {
       >
         <Card style={styles.formCard}>
           <Text style={styles.formTitle}>Student Information</Text>
+          
+          <PhotoPicker
+            label="Passport Photo"
+            value={formData.photo}
+            onChange={(uri) => updateFormData('photo', uri)}
+            placeholder="Add passport size photo"
+          />
           
           <View style={styles.row}>
             <View style={styles.halfWidth}>

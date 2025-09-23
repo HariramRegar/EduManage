@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   RefreshControl,
+  Image,
 } from 'react-native';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
@@ -14,15 +15,19 @@ import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { dataStorage } from '../../utils/storage';
 import { Student } from '../../types';
 import { theme } from '../../constants/theme';
+import { useNavigation } from '@react-navigation/native';
 
 const StudentListScreen: React.FC = () => {
+  const navigation = useNavigation<any>();
   const [students, setStudents] = useState<Student[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', loadStudents);
     loadStudents();
-  }, []);
+    return unsubscribe;
+  }, [navigation]);
 
   const loadStudents = async () => {
     try {
@@ -82,6 +87,17 @@ const StudentListScreen: React.FC = () => {
   const renderStudent = ({ item }: { item: Student }) => (
     <Card style={styles.studentCard}>
       <View style={styles.studentHeader}>
+        <View style={styles.studentPhotoContainer}>
+          {item.photo ? (
+            <Image source={{ uri: item.photo }} style={styles.studentPhoto} />
+          ) : (
+            <View style={styles.placeholderPhoto}>
+              <Text style={styles.placeholderText}>
+                {item.firstName.charAt(0)}{item.lastName.charAt(0)}
+              </Text>
+            </View>
+          )}
+        </View>
         <View style={styles.studentInfo}>
           <Text style={styles.studentName}>
             {item.firstName} {item.lastName}
@@ -107,7 +123,7 @@ const StudentListScreen: React.FC = () => {
       <View style={styles.actionButtons}>
         <Button
           title="Edit"
-          onPress={() => {/* Navigation handled by navigator */}}
+          onPress={() => navigation.navigate('StudentForm', { id: item.id })}
           variant="outline"
           size="small"
           style={styles.actionButton}
@@ -133,7 +149,7 @@ const StudentListScreen: React.FC = () => {
         <Text style={styles.title}>Students ({students.length})</Text>
         <Button
           title="Add Student"
-          onPress={() => {/* Navigation handled by navigator */}}
+          onPress={() => navigation.navigate('StudentForm')}
           style={styles.addButton}
         />
       </View>
@@ -196,6 +212,28 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: theme.spacing.md,
+  },
+  studentPhotoContainer: {
+    marginRight: theme.spacing.md,
+  },
+  studentPhoto: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: theme.colors.primaryBackground,
+  },
+  placeholderPhoto: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: theme.colors.accent,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  placeholderText: {
+    color: theme.colors.white,
+    fontSize: theme.fontSize.lg,
+    fontWeight: theme.fontWeight.semibold,
   },
   studentInfo: {
     flex: 1,

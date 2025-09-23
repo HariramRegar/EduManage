@@ -15,8 +15,10 @@ import { Card } from '../../components/common/Card';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { theme } from '../../constants/theme';
 import { validateEmail } from '../../utils/validation';
+import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen: React.FC = () => {
+  const navigation = useNavigation<any>();
   const { login, isLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -52,7 +54,7 @@ const LoginScreen: React.FC = () => {
   };
 
   const handleSignupPress = () => {
-    // Navigation will be handled by the navigator
+    navigation.navigate('Signup');
   };
 
   if (isLoading) {

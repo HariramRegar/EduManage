@@ -22,6 +22,7 @@ export interface Student {
   section: string;
   admissionDate: string;
   status: 'active' | 'inactive' | 'graduated';
+  photo?: string; // Passport size photo URI
   createdAt: string;
   updatedAt: string;
 }
@@ -41,6 +42,7 @@ export interface Teacher {
   salary: number;
   joiningDate: string;
   status: 'active' | 'inactive';
+  photo?: string; // Teacher photo URI
   createdAt: string;
   updatedAt: string;
 }
